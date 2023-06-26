@@ -80,6 +80,10 @@ class order
    {
     paid = true;
    }
+   void setState(int newState)
+   {
+    state = newState;
+   }
 
 };
 
@@ -167,6 +171,13 @@ class user{
     virtual order* getOrder(){};
     virtual int getMoney(){};
     virtual void payOrder(){};
+
+    //seller
+    virtual vector<order>* getOrders(){};
+    virtual void approvePayment(int clientID){};
+    virtual void approveOrder(int clientID){};
+    virtual void shipOrder(int clientID){};
+    virtual order* getOrderById(int clientID){};
 };
 
 class admin: public user{
@@ -193,16 +204,56 @@ class admin: public user{
 };
 
 class seller: public user{
+    orderlist* ol;
     public:
     int getUserType() {return 2;}
 
-    seller(productlist *pl): user(pl){}
+    seller(productlist *pl, orderlist *ol): user(pl){this->ol = ol;}
+
+
+    virtual order* getOrderById(int clientID)
+    {
+        order *Order = NULL;
+        for (int i = 0; i<ol->getArray()->size() && ol->getArray()->size()!=0; i++)
+        {
+            if(ol->getArray()->at(i).getCId() == clientID) Order = &ol->getArray()->at(i);
+        }
+        return Order;
+    };
+    virtual vector<order>* getOrders()
+    {
+        return ol->getArray();
+    };
+    virtual void approvePayment(int clientID)
+    {
+        order* Order = getOrderById(clientID);
+        if(Order!=NULL && Order->getState() == 1 && Order->getPaid())
+        {
+            Order->setState(2);
+        }
+    };
+    virtual void approveOrder(int clientID)
+    {
+        order* Order = getOrderById(clientID);
+        if(Order!=NULL && Order->getState() == 2)
+        {
+            Order->setState(3);
+        }
+    };
+    virtual void shipOrder(int clientID)
+    {
+        order* Order = getOrderById(clientID);
+        if(Order!=NULL && Order->getState() == 3)
+        {
+            Order->setState(4);
+            ol->removeOrder(clientID);
+        }
+    };
 };
 
 class client: public user{
     private:
     int id, money;
-    order *Order;
     orderlist* ol;
     public:
 
@@ -214,6 +265,7 @@ class client: public user{
     virtual void setId(int id){this->id = id;}
     virtual void cancelOrder()
     {
+        if(getOrder()->getPaid()) money += getOrder()->getProduct()->getPrice();
         ol->removeOrder(id);
     }
     virtual order* getOrder()
@@ -231,10 +283,7 @@ class client: public user{
     }
     virtual void createOrder(int productIndex)
     {
-        for (int i = 0; i<ol->getArray()->size(); i++)
-        {
-            if(ol->getArray()->at(i).getCId() == id) return;
-        }
+        if(getOrder()!=NULL) return;
         product *pr = &currentlist->getArray()->at(productIndex);
         ol->addOrder(id, pr);
     }

@@ -31,7 +31,7 @@ int main()
             roleChosen = 1;
             break;
         case ('2'):
-            User = new seller(&Products);
+            User = new seller(&Products, &Orders);
             correct = 1;
             roleChosen = 1;
             break;
@@ -129,9 +129,9 @@ int main()
                             {
                                 cout<<num<<"    "
                                 <<User->getProductList()->at(i).getName()<<endl
-                                <<User->getProductList()->at(i).getPrice()<<endl
-                                <<User->getProductList()->at(i).getDesc()<<endl
-                                <<User->getProductList()->at(i).getQuantity()<<endl<<endl;
+                                <<"Price: "<<User->getProductList()->at(i).getPrice()<<endl
+                                <<"Desc: "<<User->getProductList()->at(i).getDesc()<<endl
+                                <<"Left: "<<User->getProductList()->at(i).getQuantity()<<endl<<endl;
                             num++;
                             }
                         }
@@ -160,7 +160,7 @@ int main()
         case (2):
         {
             cout << "Go make money, dog" << endl;
-            cout<< "Show order list - 1\nApprove order - 2\nApprove payment - 3\nShip order - 4\nShow products - 5\nChange role - 6\nClose program - 0"<<endl;
+            cout<< "Show order list - 1\nApprove payment - 2\nApprove order - 3\nShip order - 4\nShow products - 5\nChange role - 6\nClose program - 0"<<endl;
             while(!correct)
             {
                 fflush(stdin);
@@ -170,6 +170,67 @@ int main()
                     case('1'):
                     {
                         correct = 1;
+                        system("cls");
+                        if(!User->getOrders()->empty())
+                        {
+                            for(int i = 0 ; i < User->getProductList()->size(); i++)
+                            {
+                                cout<<User->getOrders()->at(i).getCId()<<"    "
+                                <<User->getOrders()->at(i).getProduct()->getName()<<endl;
+                                if(User->getOrders()->at(i).getPaid()) cout<<"Paid\n";
+                                else cout<<"Unpaid\n";
+                                switch (User->getOrders()->at(i).getState())
+                                {
+                                case(0):
+                                cout<<"vaiting for payment\n";
+                                break;
+                                case(1):
+                                cout<<"vaiting for approval\n";
+                                break;
+                                case(2):
+                                cout<<"payment approved\n";
+                                break;
+                                case(3):
+                                cout<<"fully approved\n";
+                                break;
+                                case(4):
+                                cout<<"shipping\n";
+                                break;
+                                default:
+                                cout<<"error\n";
+                                break;
+                                }
+                                cout<<endl;
+                            }
+                        }
+                        else{
+                            cout<<"No orders\n";
+                        }
+                        getch();
+                        break;
+                    }
+                    case('2'):
+                    {
+                        correct = 1;
+                        cout<<"Enter clientID for payment approval: ";
+                        cin>>num;
+                        User->approvePayment(num);
+                        break;
+                    }
+                    case('3'):
+                    {
+                        correct = 1;
+                        cout<<"Enter clientID for order approval: ";
+                        cin>>num;
+                        User->approveOrder(num);
+                        break;
+                    }
+                    case('4'):
+                    {
+                        correct = 1;
+                        cout<<"Enter clientID for order shipment: ";
+                        cin>>num;
+                        User->shipOrder(num);
                         break;
                     }
                     case('5'):
@@ -183,9 +244,9 @@ int main()
                             {
                                 cout<<num<<"    "
                                 <<User->getProductList()->at(i).getName()<<endl
-                                <<User->getProductList()->at(i).getPrice()<<endl
-                                <<User->getProductList()->at(i).getDesc()<<endl
-                                <<User->getProductList()->at(i).getQuantity()<<endl<<endl;
+                                <<"Price: "<<User->getProductList()->at(i).getPrice()<<endl
+                                <<"Desc: "<<User->getProductList()->at(i).getDesc()<<endl
+                                <<"Left: "<<User->getProductList()->at(i).getQuantity()<<endl<<endl;
                             num++;
                             }
                         }
@@ -298,9 +359,9 @@ int main()
                             {
                                 cout<<num<<"    "
                                 <<User->getProductList()->at(i).getName()<<endl
-                                <<User->getProductList()->at(i).getPrice()<<endl
-                                <<User->getProductList()->at(i).getDesc()<<endl
-                                <<User->getProductList()->at(i).getQuantity()<<endl<<endl;
+                                <<"Price: "<<User->getProductList()->at(i).getPrice()<<endl
+                                <<"Desc: "<<User->getProductList()->at(i).getDesc()<<endl
+                                <<"Left: "<<User->getProductList()->at(i).getQuantity()<<endl<<endl;
                             num++;
                             }
                         }
