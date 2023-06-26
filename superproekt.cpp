@@ -11,7 +11,7 @@ int main()
     int userid;
     bool correct = false, StillRunning = true, roleChosen = false;
     char dec;
-    int quant, price;
+    int quant, price, num, num1;
     string desc, name;
     user *User;
     while (StillRunning)
@@ -63,6 +63,7 @@ int main()
                 {
                     case('1'):
                     {
+                        system("cls");
                         correct = 1;
                         fflush(stdin);
                         cout<<"Enter name:";
@@ -79,17 +80,41 @@ int main()
                     }
                     case('2'):
                     {
+                        system("cls");
                         correct = 1;
+                        cout<<"Enter index of product: ";
+                        cin>>num;
+                        if(User->getProductList().size()>num)User->removeProduct(num);
                         break;
                     }
                     case('3'):
                     {
                         correct = 1;
+                        system("cls");
+                        cout<<"Enter index:";
+                        cin>>num;
+                        system("cls");
+                        correct = 1;
+                        fflush(stdin);
+                        cout<<"Enter new name:";
+                        getline(std::cin, name);
+                        cout<<"Enter new price:";
+                        cin>>price;
+                        cout<<"Enter new description:";
+                        fflush(stdin);
+                        getline(std::cin, desc);
+                        User->changeProduct(num, name, price, desc);
                         break;
                     }
                     case('4'):
                     {
+                        system("cls");
                         correct = 1;
+                        cout<<"Select prodcut's index: ";
+                        cin>>num;
+                        cout<<"Select amount: ";
+                        cin>>num1;
+                        User->refillProduct(num, num1);
                         break;
                     }
                     case('5'):
@@ -98,12 +123,15 @@ int main()
                         system("cls");
                         if(!User->getProductList().empty())
                         {
+                            num = 0;
                             for(product i : User->getProductList())
                             {
-                                cout<<i.getName()<<endl
+                                cout<<num<<"    "
+                                <<i.getName()<<endl
                                 <<i.getPrice()<<endl
                                 <<i.getDesc()<<endl
                                 <<i.getQuantity()<<endl<<endl;
+                            num++;
                             }
                         }
                         getch();
@@ -131,7 +159,7 @@ int main()
         case (2):
         {
             cout << "Go make money, dog" << endl;
-            cout<< "Show order list - 1\nApprove order - 2\nApprove payment - 3\nShip order - 4\nChange role - 5\nClose program - 0"<<endl;
+            cout<< "Show order list - 1\nApprove order - 2\nApprove payment - 3\nShip order - 4\nShow products - 5\nChange role - 6\nClose program - 0"<<endl;
             while(!correct)
             {
                 fflush(stdin);
@@ -144,6 +172,26 @@ int main()
                         break;
                     }
                     case('5'):
+                    {
+                        correct = 1;
+                        system("cls");
+                        if(!User->getProductList().empty())
+                        {
+                            num = 0;
+                            for(product i : User->getProductList())
+                            {
+                                cout<<num<<"    "
+                                <<i.getName()<<endl
+                                <<i.getPrice()<<endl
+                                <<i.getDesc()<<endl
+                                <<i.getQuantity()<<endl<<endl;
+                            num++;
+                            }
+                        }
+                        getch();
+                        break;
+                    }
+                    case('6'):
                     {
                         roleChosen = 0;
                         correct = 1;
@@ -165,7 +213,7 @@ int main()
         case (3):
         {
             cout << "Welcome back our dear client!" << endl;
-            cout<< "Create order - 1\nCancel order - 2\nPay for order - 3\nShow order - 4\nChange role - 5\nClose program - 0"<<endl;
+            cout<< "Create order - 1\nCancel order - 2\nPay for order - 3\nShow order - 4\nShow products - 5\nChange role - 6nClose program - 0"<<endl;
             while(!correct)
             {
                 fflush(stdin);
@@ -178,6 +226,26 @@ int main()
                         break;
                     }
                     case('5'):
+                    {
+                        correct = 1;
+                        system("cls");
+                        if(!User->getProductList().empty())
+                        {
+                            num = 0;
+                            for(product i : User->getProductList())
+                            {
+                                cout<<num<<"    "
+                                <<i.getName()<<endl
+                                <<i.getPrice()<<endl
+                                <<i.getDesc()<<endl
+                                <<i.getQuantity()<<endl<<endl;
+                            num++;
+                            }
+                        }
+                        getch();
+                        break;
+                    }
+                    case('6'):
                     {
                         roleChosen = 0;
                         correct = 1;

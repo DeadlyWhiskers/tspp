@@ -20,6 +20,16 @@ class product
         this->desc = desc;
         this->quantity = quant;
     }
+    void refill(int plusq)
+    {
+        quantity = quantity + plusq;
+    }
+    void change(string name, int price, string desc)
+    {
+        this->name = name;
+        this->price = price;
+        this->desc = desc;
+    }
 };
 
 class order
@@ -55,6 +65,18 @@ class productlist
     {
         productlistArray.push_back(product(name, price, desc, quant));
     }
+    void removeProduct(int index)
+    {
+        productlistArray.erase(productlistArray.begin()+index);
+    }
+    void refillProduct(int index, int plusq)
+    {
+        productlistArray[index].refill(plusq);
+    }
+    void changeProduct(int index, string name, int price, string desc)
+    {
+        productlistArray[index].change(name, price, desc);
+    }
 };
 
 class user{
@@ -80,14 +102,29 @@ class user{
 
     //admin
     virtual void addProduct(string name, int price, string desc, int quant){}
+    virtual void changeProduct(int index, string name, int price, string desc){}
+    virtual void removeProduct(int index){}
+    virtual void refillProduct(int index, int plusq){}
 };
 
 class admin: public user{
     public:
     int getUserType() {return 1;}
+    virtual void changeProduct(int index, string name, int price, string desc)
+    {
+        currentlist->changeProduct(index, name, price, desc);
+    }
     virtual void addProduct(string name, int price, string desc, int quant)
     {
         currentlist->addProduct(name,price,desc,quant);
+    }
+    virtual void removeProduct(int index)
+    {
+        currentlist->removeProduct(index);
+    }
+    virtual void refillProduct(int index, int plusq)
+    {
+        currentlist->refillProduct(index, plusq);
     }
 
     admin(productlist *pl): user(pl){}
